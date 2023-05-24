@@ -1,5 +1,5 @@
 fastapi
+netifaces
 uvicorn
 scapy
 libpcap
-jinja2
