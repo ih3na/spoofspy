@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from scapy.all import *
 import queue
+import netifaces
 
 # Class Queue initialization
 class CapturedDataQueue:
