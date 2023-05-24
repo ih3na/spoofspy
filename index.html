@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Packet Capture</title>
+    <style>
+        .spoof {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Packet Capture</h1>
+    <form action="/" method="post">
+        <label for="interface">Interface:</label>
+        <input type="text" id="interface" name="interface" value="{{ interface }}" required><br><br>
+        <input type="submit" value="Update Interface">
+    </form>
+    <h2>Captured Data:</h2>
+    {% for item in data %}
+        {% if "spoof" in item %}
+            <p class="spoof">{{ item }}</p>
+        {% else %}
+            <p>{{ item }}</p>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
