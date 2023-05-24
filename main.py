@@ -1,7 +1,5 @@
 from fastapi import FastAPI, Request
-from fastapi.templating import Jinja2Templates
 from scapy.all import *
-import uvicorn
 import queue
 
 # Class Queue initialization
@@ -19,7 +17,6 @@ class CapturedDataQueue:
         return self.queue.empty()
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
 
 expected_interface = "enp3s0f3u1u1"  # Default interface
 captured_data = CapturedDataQueue()  # Queue to store captured data
@@ -55,20 +52,23 @@ def process_packet(packet):
     captured_data.put(f"Destination IP: {destination_ip}")
     captured_data.put(f"Protocol: {protocol}")
 
-@app.get("/")
-def index(request: Request):
-    data = []
-    while not captured_data.empty():
-        data.append(captured_data.get())
-    return templates.TemplateResponse("index.html", {"request": request, "interface": expected_interface, "data": data})
+# @app.get("/")
+# async def root():
+#     return {"message": "Hello from home"}
 
-@app.post("/")
-async def update_interface(request: Request):
-    form = await request.form()
-    global expected_interface
-    expected_interface = form["interface"]
-    return {"message": "Interface updated successfully"}
+# @app.get("/stats")
+# def index(request: Request):
+#     data = []
+#     while not captured_data.empty():
+#         data.append(captured_data.get())
+#     return {"request": request, "interface": expected_interface, "data": data}
+
+# @app.post("/")
+# async def update_interface(request: Request):
+#     form = await request.form()
+#     global expected_interface
+#     expected_interface = form["interface"]
+#     return {"message": "Interface updated successfully"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=5050) # Run the FastAPI app using Uvicorn server
     sniff(filter="ip", prn=process_packet, iface=expected_interface) # Start sniffing packets on the network interface
