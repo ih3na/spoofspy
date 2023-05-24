@@ -1,18 +1,41 @@
 from scapy.all import *
+import queue
 import netifaces
 
-expected_interface = "enp3s0f3u1u1"
+# Class Queue initialization
+class CapturedDataQueue:
+    def __init__(self):
+        self.queue = queue.Queue()
 
-# Define a list of known bogon IP ranges
+    def put(self, item):
+        self.queue.put(item)
+
+    def get(self):
+        return self.queue.get()
+
+    def empty(self):
+        return self.queue.empty()
+
+captured_data = CapturedDataQueue()  # Queue to store captured data
+
+expected_interface = "enp3s0f3u1u1"  # Default interface
+
+# List of known bogon IPv4 and IPv6 ranges
 bogon_ranges = [
     "0.0.0.0/8",
     "10.0.0.0/8",
     "127.0.0.0/8",
-    # Add more bogon ranges as needed
+
+
+    "::/128",
+    "fe80::/10",
+
 ]
 
-# Define a callback function to process each captured packet
+# Process captured packets
 def process_packet(packet):
+    
+    # Captured packs malicious checkups
     if packet.haslayer(IP):
         # Extract IP information from the packet
         source_ip = packet[IP].src
@@ -20,22 +43,23 @@ def process_packet(packet):
         destination_ip = packet[IP].dst
         protocol = packet[IP].proto
         
+        #Perform RPF check
         if source_ip != expected_ip:
-            print("Potential IP spoofing detected: RPF check failed!")
-            return
+            captured_data.put("Potential IP spoofing detected: RPF check failed!")
 
         # Perform Bogon filtering
         for bogon_range in bogon_ranges:
-            if IP(source_ip) in IP(bogon_range):
-                print("Potential IP spoofing detected: Bogon filter matched!")
-                return
+            if source_ip in bogon_range:
+                captured_data.put("Potential IP spoofing detected: Bogon filter matched!")
 
-        # Process the extracted IP information
-        print(f"Source IP: {source_ip}")
-        print(f"Destination IP: {destination_ip}")
-        print(f"Protocol: {protocol}")
+    # Store the packet data for display on the web page
+    captured_data.put(f"Source IP: {source_ip}")
+    captured_data.put(f"Destination IP: {destination_ip}")
+    captured_data.put(f"Protocol: {protocol}")
+    
+    data = []
+    data.append(captured_data.get())
+    print(data)
 
-# Start sniffing packets on the network interface
 if __name__ == "__main__":
-    sniff(filter="ip", prn=process_packet, iface=expected_interface)
-
+    sniff(filter="ip", prn=process_packet, iface=expected_interface) # Start sniffing packets on the network interface

@@ -1,61 +1,17 @@
 from fastapi import FastAPI, Request
-from scapy.all import *
-import queue
-import netifaces
-
-# Class Queue initialization
-class CapturedDataQueue:
-    def __init__(self):
-        self.queue = queue.Queue()
-
-    def put(self, item):
-        self.queue.put(item)
-
-    def get(self):
-        return self.queue.get()
-
-    def empty(self):
-        return self.queue.empty()
+import subprocess as sp
+import sniff as sf
 
 app = FastAPI()
 
-expected_interface = "enp3s0f3u1u1"  # Default interface
-captured_data = CapturedDataQueue()  # Queue to store captured data
-
-# List of known bogon IPv4 and IPv6 ranges
-bogon_ranges = [
-    "0.0.0.0/8",
-    "10.0.0.0/8",
-    "127.0.0.0/8",
+cmd = "sudo python3 sniff.py"
+sp.run(cmd, shell=True)
 
 
-    "::/128",
-    "fe80::/10",
+@app.get("/")
+async def root():
 
-]
-
-# Process captured packets
-def process_packet(packet):
-    
-    if packet.haslayer(IP):
-        # Perform RPF check
-        if packet[IP].src != packet[IP].src_route:
-            captured_data.put("Potential IP spoofing detected: RPF check failed!")
-
-        # Perform Bogon filtering
-        source_ip = packet[IP].src
-        for bogon_range in bogon_ranges:
-            if IP(source_ip) in IP(bogon_range):
-                captured_data.put("Potential IP spoofing detected: Bogon filter matched!")
-
-    # Store the packet data for display on the web page
-    captured_data.put(f"Source IP: {source_ip}")
-    captured_data.put(f"Destination IP: {destination_ip}")
-    captured_data.put(f"Protocol: {protocol}")
-
-# @app.get("/")
-# async def root():
-#     return {"message": "Hello from home"}
+    return sf.captured_data.get()
 
 # @app.get("/stats")
 # def index(request: Request):
@@ -71,5 +27,3 @@ def process_packet(packet):
 #     expected_interface = form["interface"]
 #     return {"message": "Interface updated successfully"}
 
-if __name__ == "__main__":
-    sniff(filter="ip", prn=process_packet, iface=expected_interface) # Start sniffing packets on the network interface
