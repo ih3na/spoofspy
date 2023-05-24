@@ -1,24 +1,20 @@
 from fastapi import FastAPI, Request
-import subprocess as sp
-import sniff as sf
+import sniff as snf
 
 app = FastAPI()
 
-cmd = "sudo python3 sniff.py"
-sp.run(cmd, shell=True)
-
+capture = snf.captured_data
 
 @app.get("/")
 async def root():
+    return {"message": "lol"}
 
-    return sf.captured_data.get()
-
-# @app.get("/stats")
-# def index(request: Request):
-#     data = []
-#     while not captured_data.empty():
-#         data.append(captured_data.get())
-#     return {"request": request, "interface": expected_interface, "data": data}
+@app.get("/stats")
+def index():
+    data = []
+    while not (capture.empty()):
+        data.append(capture.get())
+    return {"data": data}
 
 # @app.post("/")
 # async def update_interface(request: Request):
