@@ -3,3 +3,4 @@ netifaces
 uvicorn
 scapy
 libpcap
+streamlit
