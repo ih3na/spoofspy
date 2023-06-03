@@ -7,7 +7,7 @@ capture = snf.captured_data
 
 @app.get("/")
 async def root():
-    return {"message": "lol"}
+    return {"message": "hello from root"}
 
 @app.get("/stats")
 def index():
@@ -16,10 +16,10 @@ def index():
         data.append(capture.get())
     return {"data": data}
 
-# @app.post("/")
-# async def update_interface(request: Request):
-#     form = await request.form()
-#     global expected_interface
-#     expected_interface = form["interface"]
-#     return {"message": "Interface updated successfully"}
+@app.post("/")
+async def update_interface(request: Request):
+    form = await request.form()
+    global expected_interface
+    expected_interface = form["interface"]
+    return {"message": "Interface updated successfully"}
 
