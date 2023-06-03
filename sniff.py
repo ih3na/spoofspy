@@ -24,12 +24,60 @@ expected_interface = "enp3s0f3u1u1"  # Default interface
 bogon_ranges = [
     "0.0.0.0/8",
     "10.0.0.0/8",
+    "100.64.0.0/10",
     "127.0.0.0/8",
+    "127.0.53.53",
+    "169.254.0.0/16",
+    "172.16.0.0/12",
+    "192.0.0.0/24",	
+    "192.0.2.0/24",
+    "192.168.0.0/16",
+    "198.18.0.0/15",
+    "198.51.100.0/24",
+    "203.0.113.0/24",
+    "224.0.0.0/4",
+    "240.0.0.0/4",
+    "255.255.255.255/32",
 
-
-    "::/128",
-    "fe80::/10",
-
+    "::/128",	# Node-scope unicast unspecified address
+    "::1/128",	# Node-scope unicast loopback address
+    "::ffff:0:0/96",	# IPv4-mapped addresses
+    "::/96",	# IPv4-compatible addresses
+    "100::/64",	# Remotely triggered black hole addresses
+    "2001:10::/28",	# Overlay routable cryptographic hash identifiers (ORCHID)
+    "2001:db8::/32",	# Documentation prefix
+    "fc00::/7",	#Unique local addresses (ULA)
+    "fe80::/10",	#Link-local unicast
+    "fec0::/10",	#Site-local unicast (deprecated)
+    "ff00::/8",
+    "2002::/24",	# 6to4 bogon (0.0.0.0/8)
+    "2002:a00::/24",	# 6to4 bogon (10.0.0.0/8)
+    "2002:7f00::/24",	# 6to4 bogon (127.0.0.0/8)
+    "2002:a9fe::/32",	# 6to4 bogon (169.254.0.0/16)
+    "2002:ac10::/28",	# 6to4 bogon (172.16.0.0/12)
+    "2002:c000::/40",	# 6to4 bogon (192.0.0.0/24)
+    "2002:c000:200::/40v",	# 6to4 bogon (192.0.2.0/24)
+    "2002:c0a8::/32	6to4",	# bogon (192.168.0.0/16)
+    "2002:c612::/31	6to4",	# bogon (198.18.0.0/15)
+    "2002:c633:6400::/40",	# 6to4 bogon (198.51.100.0/24)
+    "2002:cb00:7100::/40",	# 6to4 bogon (203.0.113.0/24)
+    "2002:e000::/20	6to4",	# bogon (224.0.0.0/4)
+    "2002:f000::/20	6to4",	# bogon (240.0.0.0/4)
+    "2002:ffff:ffff::/48",	# 6to4 bogon (255.255.255.255/32)
+    "2001::/40	Teredo bogon",	# (0.0.0.0/8)
+    "2001:0:a00::/40",	# Teredo bogon (10.0.0.0/8)
+    "2001:0:7f00::/40",	# Teredo bogon (127.0.0.0/8)
+    "2001:0:a9fe::/48",	# Teredo bogon (169.254.0.0/16)
+    "2001:0:ac10::/44",	# Teredo bogon (172.16.0.0/12)
+    "2001:0:c000::/56",	# Teredo bogon (192.0.0.0/24)
+    "2001:0:c000:200::/56",	# Teredo bogon (192.0.2.0/24)
+    "2001:0:c0a8::/48",	# Teredo bogon (192.168.0.0/16)
+    "2001:0:c612::/47",	# Teredo bogon (198.18.0.0/15)
+    "2001:0:c633:6400::/56",	# Teredo bogon (198.51.100.0/24)
+    "2001:0:cb00:7100::/56",	# Teredo bogon (203.0.113.0/24)
+    "2001:0:e000::/36",	# Teredo bogon (224.0.0.0/4)
+    "2001:0:f000::/36",	# Teredo bogon (240.0.0.0/4)
+    "2001:0:ffff:ffff::/64",	# Teredo bogon (255.255.255.255/32)
 ]
 
 # Assign protocol names by their numbers
