@@ -10,10 +10,10 @@ async def root():
     return {"message": "hello from root"}
 
 @app.get("/stats")
-def index():
+async def index():
     data = []
     while not (capture.empty()):
-        data.append(capture.get())
+        await data.append(capture.get())
     return {"data": data}
 
 @app.post("/")
